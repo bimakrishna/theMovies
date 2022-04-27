@@ -3,12 +3,12 @@ import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {getMovieById} from '../../../redux/actions/movies';
+import {styles} from './styles';
 
 export default function MovieDetailPage(props) {
   const {navigation} = props;
   const dispatch = useDispatch();
   const item = props?.route?.params?.item?.item;
-  const {backdrop_path, name, overview, poster_path} = item;
   const [movie, setMovie] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +31,7 @@ export default function MovieDetailPage(props) {
 
   const RenderSeasons = ({data}) => {
     return (
-      <View style={{flexDirection: 'row'}}>
+      <View style={styles.direction}>
         <Image
           source={{
             uri:
@@ -39,12 +39,12 @@ export default function MovieDetailPage(props) {
                 ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzEnIvoqFQz-_nzodrgFhq7y6eN4yJoQVZ4g&usqp=CAU'
                 : `https://image.tmdb.org/t/p/original${data?.poster_path}`,
           }}
-          style={{width: 100, height: 160}}
+          style={styles.imageSize}
           resizeMode={'contain'}
         />
-        <View style={{padding: 10}}>
-          <Text style={{fontSize: 15, fontWeight: 'bold'}}>{data?.name}</Text>
-          <Text style={{fontSize: 13, fontWeight: 'bold'}}>
+        <View style={styles.seasonsWrap}>
+          <Text style={styles.textSize}>{data?.name}</Text>
+          <Text style={styles.underTitleSize}>
             {moment(data?.air_date).format('YYYY')} | {data?.episode_count}{' '}
             Episodes
           </Text>
@@ -60,30 +60,18 @@ export default function MovieDetailPage(props) {
         source={{
           uri: `https://image.tmdb.org/t/p/original${movie?.backdrop_path}`,
         }}
-        style={{width: 500, height: 200}}
+        style={styles.imageHeader}
       />
-      <TouchableOpacity
-        style={{position: 'absolute', padding: 16}}
-        onPress={goback}>
-        <Text style={{fontWeight: 'bold', fontSize: 20, color: 'white'}}>
-          x
-        </Text>
+      <TouchableOpacity style={styles.buttonHeaderImage} onPress={goback}>
+        <Text style={styles.textButton}>x</Text>
       </TouchableOpacity>
-      <ScrollView
-        style={{
-          paddingHorizontal: 20,
-          paddingVertical: 15,
-        }}>
-        <Text style={{fontSize: 30, fontWeight: 'bold'}}>{movie?.name}</Text>
-        <Text style={{marginTop: 10}}>{movie?.overview}</Text>
-        <View style={{marginVertical: 15, marginBottom: 200}}>
-          <Text style={{fontWeight: 'bold', fontSize: 15}}>Seasons</Text>
+      <ScrollView style={styles.scrollViewStyle}>
+        <Text style={styles.nameWrap}>{movie?.name}</Text>
+        <Text style={styles.overViewWrap}>{movie?.overview}</Text>
+        <View style={styles.upperSeasonWrap}>
+          <Text style={styles.textSize}>Seasons</Text>
           {loading ? (
-            <View
-              style={{
-                alignItems: 'center',
-                marginTop: 20,
-              }}>
+            <View style={styles.loadingWrap}>
               <Text>Loading ... </Text>
             </View>
           ) : (

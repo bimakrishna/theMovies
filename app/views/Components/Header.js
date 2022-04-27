@@ -1,5 +1,5 @@
-import {View, Text, Dimensions, Platform} from 'react-native';
 import React from 'react';
+import {Dimensions, Platform, Text, View} from 'react-native';
 
 export default function Header({title}) {
   const {width, height} = Dimensions.get('window');

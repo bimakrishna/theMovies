@@ -1,19 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, FlatList, SafeAreaView, Text, View} from 'react-native';
+import {FlatList, SafeAreaView, Text, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {getMovie} from '../../../redux/actions/movies';
 import {CardItem, Header, TextInput} from '../../Components';
+import {styles} from './styles';
 
 const ListFooterComponent = () => (
-  <Text
-    style={{
-      fontSize: 16,
-      fontWeight: 'bold',
-      textAlign: 'center',
-      padding: 5,
-    }}>
-    Loading...
-  </Text>
+  <Text style={styles.footerStyle}>Loading...</Text>
 );
 
 let stopFetchMore = true;
@@ -21,7 +14,6 @@ let stopFetchMore = true;
 export default function MainApp(props) {
   const dispatch = useDispatch();
   const {navigation} = props;
-  const {width, height} = Dimensions.get('window');
   const [isLoading, setLoading] = useState(false);
   const [count, setCount] = useState(1);
 
@@ -48,7 +40,7 @@ export default function MainApp(props) {
 
   const renderItem = item => {
     return (
-      <View style={{marginTop: 5}} key={item.id}>
+      <View style={styles.renderTopItem} key={item.id}>
         <CardItem
           onPress={() => toDetail(item)}
           poster={item?.item?.poster_path}
@@ -57,7 +49,7 @@ export default function MainApp(props) {
           date={item?.item?.first_air_date}
           data={item?.item}
         />
-        <View style={{backgroundColor: '#dfe3e7', width: '100%', height: 2}} />
+        <View style={styles.itemWrap} />
       </View>
     );
   };
@@ -69,11 +61,11 @@ export default function MainApp(props) {
   return (
     <View>
       <Header title={'TV Show'} />
-      <View style={{paddingHorizontal: width * 0.02, marginTop: width * 0.02}}>
+      <View style={styles.mainWrap}>
         <TextInput placeholder={'Search TV Show'} />
-        <SafeAreaView style={{marginTop: 10}}>
+        <SafeAreaView style={styles.safeAreaViewWrap}>
           <FlatList
-            style={{marginBottom: 250}}
+            style={styles.flatlistWrap}
             data={movies}
             renderItem={renderItem}
             keyExtractor={item => item.id}
