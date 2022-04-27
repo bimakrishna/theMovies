@@ -1,9 +1,10 @@
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, Pressable} from 'react-native';
 import React from 'react';
+import moment from 'moment';
 
 export default function CardItem({poster, rating, title, date, onPress}) {
   return (
-    <TouchableOpacity
+    <Pressable
       style={{flexDirection: 'row', marginBottom: 10}}
       onPress={onPress}>
       <Image
@@ -18,12 +19,34 @@ export default function CardItem({poster, rating, title, date, onPress}) {
           width: '60%',
           justifyContent: 'space-between',
         }}>
-        <Text>{title}</Text>
-        <Text>{date}</Text>
+        <Text style={{fontWeight: 'bold'}}>{title}</Text>
+        <Text>{moment(date).format('MMM DD, YYYY')}</Text>
       </View>
       <View>
-        <Text>{rating}</Text>
+        <Text
+          style={{
+            backgroundColor: '#81bb63',
+            padding: 10,
+            borderRadius: 10,
+            fontWeight: 'bold',
+            color: 'white',
+            width: 40,
+            height: 40,
+            alignItems: 'center',
+            textAlign: 'center',
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+
+            elevation: 7,
+          }}>
+          {rating}
+        </Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }

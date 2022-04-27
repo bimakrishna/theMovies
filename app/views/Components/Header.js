@@ -1,4 +1,4 @@
-import {View, Text, Dimensions} from 'react-native';
+import {View, Text, Dimensions, Platform} from 'react-native';
 import React from 'react';
 
 export default function Header({title}) {
@@ -6,9 +6,8 @@ export default function Header({title}) {
   return (
     <View
       style={{
-        paddingTop: 0,
         alignItems: 'center',
-        paddingTop: width * 0.13,
+        paddingTop: Platform.OS === 'ios' ? width * 0.13 : width * 0.08,
       }}>
       <Text style={{fontWeight: 'bold'}}>{title}</Text>
     </View>
