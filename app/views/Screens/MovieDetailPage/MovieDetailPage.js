@@ -1,21 +1,55 @@
-import React from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import moment from 'moment';
+import React, {useEffect, useState} from 'react';
+import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {getMovieById} from '../../../redux/actions/movies';
 
 export default function MovieDetailPage(props) {
   const {navigation} = props;
+  const dispatch = useDispatch();
   const item = props?.route?.params?.item?.item;
   const {backdrop_path, name, overview, poster_path} = item;
-  console.log(item, 'props');
+  const [movie, setMovie] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const goback = () => {
     navigation.goBack();
   };
 
-  const RenderItem = ({title, value}) => {
+  useEffect(() => {
+    setLoading(true);
+    dispatch(getMovieById(item.id))
+      .then(res => {
+        setLoading(false);
+        setMovie(res);
+      })
+      .catch(err => {
+        setLoading(false);
+        console.log(err, 'err');
+      });
+  }, []);
+
+  const RenderSeasons = ({data}) => {
     return (
-      <View>
-        <Text style={{fontWeight: 'bold'}}>{title}</Text>
-        <Text>{value}</Text>
+      <View style={{flexDirection: 'row'}}>
+        <Image
+          source={{
+            uri:
+              data?.poster_path === null
+                ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzEnIvoqFQz-_nzodrgFhq7y6eN4yJoQVZ4g&usqp=CAU'
+                : `https://image.tmdb.org/t/p/original${data?.poster_path}`,
+          }}
+          style={{width: 100, height: 160}}
+          resizeMode={'contain'}
+        />
+        <View style={{padding: 10}}>
+          <Text style={{fontSize: 15, fontWeight: 'bold'}}>{data?.name}</Text>
+          <Text style={{fontSize: 13, fontWeight: 'bold'}}>
+            {moment(data?.air_date).format('YYYY')} | {data?.episode_count}{' '}
+            Episodes
+          </Text>
+          <Text>{data?.overview}</Text>
+        </View>
       </View>
     );
   };
@@ -24,7 +58,7 @@ export default function MovieDetailPage(props) {
     <View>
       <Image
         source={{
-          uri: `https://image.tmdb.org/t/p/original${backdrop_path}`,
+          uri: `https://image.tmdb.org/t/p/original${movie?.backdrop_path}`,
         }}
         style={{width: 500, height: 200}}
       />
@@ -35,50 +69,30 @@ export default function MovieDetailPage(props) {
           x
         </Text>
       </TouchableOpacity>
-      <View
+      <ScrollView
         style={{
           paddingHorizontal: 20,
           paddingVertical: 15,
         }}>
-        <View style={{flexDirection: 'row'}}>
-          <Image
-            source={{
-              uri: `https://image.tmdb.org/t/p/original${poster_path}`,
-            }}
-            style={{width: 100, height: 200}}
-            resizeMode={'contain'}
-          />
-          <View style={{paddingTop: 20, paddingLeft: 20, width: '60%'}}>
-            <Text style={{fontSize: 30, fontWeight: 'bold'}}>{name}</Text>
-            <Text style={{marginTop: 10}}>{overview}</Text>
-          </View>
+        <Text style={{fontSize: 30, fontWeight: 'bold'}}>{movie?.name}</Text>
+        <Text style={{marginTop: 10}}>{movie?.overview}</Text>
+        <View style={{marginVertical: 15, marginBottom: 200}}>
+          <Text style={{fontWeight: 'bold', fontSize: 15}}>Seasons</Text>
+          {loading ? (
+            <View
+              style={{
+                alignItems: 'center',
+                marginTop: 20,
+              }}>
+              <Text>Loading ... </Text>
+            </View>
+          ) : (
+            movie?.seasons?.map(el => {
+              return <RenderSeasons data={el} />;
+            })
+          )}
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginVertical: 20,
-            padding: 20,
-            backgroundColor: 'red',
-            backgroundColor: 'white',
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            borderRadius: 10,
-            elevation: 5,
-          }}>
-          <RenderItem
-            title={'Language'}
-            value={item?.original_language.toUpperCase()}
-          />
-          <RenderItem title={'Vote'} value={item?.vote_average} />
-          <RenderItem title={'Country'} value={item?.origin_country[0]} />
-        </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }

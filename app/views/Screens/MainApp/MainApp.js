@@ -46,9 +46,6 @@ export default function MainApp(props) {
       });
   };
 
-  useEffect(() => {
-    console.log(movies, 'movies');
-  }, [movies]);
   const renderItem = item => {
     return (
       <View style={{marginTop: 5}} key={item.id}>
