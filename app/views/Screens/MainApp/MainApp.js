@@ -1,8 +1,8 @@
-import {View, Text, Dimensions, SafeAreaView, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Header, TextInput, CardItem} from '../../Components';
-import {useDispatch, useSelector} from 'react-redux';
+import {Dimensions, FlatList, SafeAreaView, Text, View} from 'react-native';
+import {useDispatch} from 'react-redux';
 import {getMovie} from '../../../redux/actions/movies';
+import {CardItem, Header, TextInput} from '../../Components';
 
 const ListFooterComponent = () => (
   <Text
@@ -58,6 +58,7 @@ export default function MainApp(props) {
           rating={item?.item?.vote_average}
           title={item?.item?.name}
           date={item?.item?.first_air_date}
+          data={item?.item}
         />
         <View style={{backgroundColor: '#dfe3e7', width: '100%', height: 2}} />
       </View>
@@ -68,10 +69,6 @@ export default function MainApp(props) {
     navigation.navigate('MovieDetailPage', {item: item});
   };
 
-  const handleOnEndReached = () => {
-    console.log('coba ya');
-  };
-
   return (
     <View>
       <Header title={'TV Show'} />
@@ -79,7 +76,7 @@ export default function MainApp(props) {
         <TextInput placeholder={'Search TV Show'} />
         <SafeAreaView style={{marginTop: 10}}>
           <FlatList
-            style={{marginBottom: 280}}
+            style={{marginBottom: 250}}
             data={movies}
             renderItem={renderItem}
             keyExtractor={item => item.id}
